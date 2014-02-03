@@ -233,7 +233,7 @@ function apg_sms_muestra_mensaje() {
 	wp_enqueue_style('apg_sms_fuentes'); //Loads the global stylesheet
 	
 	$configuracion = get_option('apg_sms_settings');
-	if (!isset($configuracion['mensaje_pedido']) || !isset($configuracion['mensaje_nota'])) add_action('admin_notices', 'apg_sms_actualizacion'); // Check whether to show the update settings message
+//	if (!isset($configuracion['mensaje_pedido']) || !isset($configuracion['mensaje_nota'])) add_action('admin_notices', 'apg_sms_actualizacion'); // Check whether to show the update settings message
 }
 add_action('admin_init', 'apg_sms_muestra_mensaje');
 
