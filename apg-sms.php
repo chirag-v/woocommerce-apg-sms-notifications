@@ -106,51 +106,6 @@ add_action('woocommerce_new_customer_note', 'apg_sms_procesa_notas', 10);
 //Send the SMS message
 function apg_sms_envia_sms($configuracion, $telefono, $mensaje) {
 	if ($configuracion['servicio'] == "solutions_infini") $respuesta = apg_sms_curl("http://alerts.sinfini.com/api/web2sms.php?workingkey=" . $configuracion['clave_solutions_infini'] . "&to=" . $telefono . "&sender=" . $configuracion['identificador_solutions_infini'] . "&message=" . apg_sms_codifica_el_mensaje($mensaje));
-	else if ($configuracion['servicio'] == "twillio")
-	{
-		require_once("lib/twilio.php");
-		if (!isset($twillio)) $twillio = new Services_Twilio($configuracion['clave_twillio'], $configuracion['identificador_twillio']);
-		$respuesta = $twillio->account->messages->create(array('To' => $telefono, 'From' => $configuracion['telefono'], 'Body' => $mensaje,));
-	}
-	else if ($configuracion['servicio'] == "clickatell") 
-	{
-		$respuesta = file("http://api.clickatell.com/http/auth?user=" . $configuracion['usuario_clickatell'] . "&password=" . $configuracion['contrasena_clickatell'] . "&api_id=" . $configuracion['identificador_clickatell']);
-		$sesion = explode(":", $respuesta[0]);
-		if ($sesion[0] == "OK") 
-		{
-			$sesion = trim($sesion[1]);
-			$respuesta = file("http://api.clickatell.com/http/sendmsg?session_id=$sesion&to=$telefono&text=" . apg_sms_codifica_el_mensaje($mensaje));
-		} 
-	}
-	else if ($configuracion['servicio'] == "clockwork") 
-	{
-		require_once("lib/class-Clockwork.php");
-		if (!isset($clockwork)) $clockwork = new Clockwork($configuracion['identificador_clockwork']);
-		$mensaje = array('to' => $telefono, 'message' => apg_sms_normaliza_mensaje($mensaje));
-		$respuesta = $clockwork->send($mensaje);
-	}
-	else if ($configuracion['servicio'] == "bulksms") apg_sms_curl("http://bulksms.vsms.net/eapi/submission/send_sms/2/2.0?username=" . $configuracion['usuario_bulksms'] . "&password=" . $configuracion['contrasena_bulksms'] . "&message=" . apg_sms_codifica_el_mensaje($mensaje) . "&msisdn=" . urlencode($telefono));
-	else if ($configuracion['servicio'] == "open_dnd") apg_sms_curl("http://txn.opendnd.in/pushsms.php?username=" . $configuracion['usuario_open_dnd'] . "&password=" . $configuracion['contrasena_open_dnd'] . "&message=" . apg_sms_codifica_el_mensaje(apg_sms_normaliza_mensaje($mensaje)) . "&sender=" . $configuracion['identificador_open_dnd'] . "&numbers=" . $telefono);
-	else if ($configuracion['servicio'] == "msg91") 
-	{
-
-		$ch = curl_init();
-		curl_setopt_array($ch, array(
-			CURLOPT_URL => "http://control.msg91.com/sendhttp.php",
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_POST => true,
-			CURLOPT_POSTFIELDS => array(
-				'authkey' => $configuracion['clave_msg91'],
-				'mobiles' => $telefono,
-				'message' => apg_sms_codifica_el_mensaje(apg_sms_normaliza_mensaje($mensaje)),
-				'sender' => $configuracion['identificador_msg91'],
-				'route' => $configuracion['ruta_msg91']
-			)
-		));
-		$respuesta = curl_exec($ch);
-		curl_close($ch);
-	}
-
 }
 
 //Read the pages external to this website
@@ -184,6 +139,7 @@ function apg_sms_codifica_el_mensaje($mensaje) {
 	return urlencode(htmlentities($mensaje, ENT_QUOTES, "UTF-8"));
 }
 
+/*
 //See if you need international phone code
 function apg_sms_prefijo($servicio) {
 	if ($servicio == "clockwork" || $servicio == "clickatell" || $servicio == "bulksms" || $servicio == "msg91" || $servicio == "twillio") return true;
@@ -208,6 +164,7 @@ function apg_sms_procesa_el_telefono($pedido, $telefono, $servicio) {
 
 	return $telefono;
 }
+*/
 
 //Process variables
 function apg_sms_procesa_variables($mensaje, $pedido, $variables, $nota = '') {
@@ -236,6 +193,7 @@ function apg_sms_procesa_variables($mensaje, $pedido, $variables, $nota = '') {
 	return $mensaje;
 }
 
+/*
 //Returns the country code prefix
 function dame_prefijo_pais($pais = '') {
 	$paises = array('AC' => '247', 'AD' => '376', 'AE' => '971', 'AF' => '93', 'AG' => '1268', 'AI' => '1264', 'AL' => '355', 'AM' => '374', 'AO' => '244', 'AQ' => '672', 'AR' => '54', 'AS' => '1684', 'AT' => '43', 'AU' => '61', 'AW' => '297', 'AX' => '358', 'AZ' => '994', 'BA' => '387', 'BB' => '1246', 'BD' => '880', 'BE' => '32', 'BF' => '226', 'BG' => '359', 'BH' => '973', 'BI' => '257', 'BJ' => '229', 'BL' => '590', 'BM' => '1441', 'BN' => '673', 'BO' => '591', 'BQ' => '599', 'BR' => '55', 'BS' => '1242', 'BT' => '975', 'BW' => '267', 
@@ -249,7 +207,7 @@ function dame_prefijo_pais($pais = '') {
 
 	return ($pais == '') ? $paises : (isset($paises[$pais]) ? $paises[$pais] : '');
 }
-
+*/
 //Get all the information about the plugin
 function apg_sms_plugin($nombre) {
 	$argumentos = (object) array('slug' => $nombre);
