@@ -2,4 +2,4 @@ This is modified version of APG SMS Notifications plugin: http://wordpress.org/p
 
 Instead on all the providers, this plugin works only with Solutions Infini API.
 
-For instructions on use read : bigkahuna.in/woocommerce-apg-sms-notifications
+For instructions on use read : http://bigkahuna.in/woocommerce-apg-sms-notifications
